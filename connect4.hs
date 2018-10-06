@@ -1,36 +1,45 @@
 module Connect4 where
 
-type Board = [Row]
-type Row = [Player]
-data Player = O | B | X
- deriving (Ord, Eq, Show)
+import Connect4Types
+import Data.Map (Map)
 
-createboard :: Int -> Int -> [[Player]]
+createboard :: Int -> Int -> [[Token]]
 createboard rows cols 
     | rows > 0 = createrow cols : createboard (rows - 1) cols
     | otherwise = []
 
 
-createrow :: Int -> [Player]
+createrow :: Int -> [Token]
 createrow cols
-    | cols > 0 = B : createrow (cols - 1)
+    | cols > 0 = E : createrow (cols - 1)
     | otherwise = []
 
--- Main game loop
+getNum :: IO Int
+getNum = readLn 
 
+-- Main game loop
  -- To play the game, call main
 main :: IO ()
 main = do
     putStrLn "Welcome to Connect4"
-    printBoard (createboard 6 7)
+    putStrLn "Please enter the chip character for Player 1."
+    --p1 <- getChar
+    putStrLn "Please enter the chip character for Player 2."
+    --p2 <- getChar
+    putStrLn "Please enter the number of rows on the gameboard."
+    rows <- getNum
+    putStrLn "Please enter the number of columns on the gameboard."
+    cols <- getNum
+    printBoard (createboard rows cols)
 
 printBoard :: Board -> IO ()
 printBoard board =
   putStrLn (unlines (map showRow board))
   where
-   showRow = map showPlayer
+   showRow = map showToken
 
-showPlayer :: Player -> Char
-showPlayer O = 'O'
-showPlayer B = '.'
-showPlayer X = 'X'
+showToken :: Token -> Char
+showToken P1 = 'A'
+showToken P2 = 'B'
+showToken E = '.'
+
