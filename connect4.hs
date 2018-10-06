@@ -89,9 +89,13 @@ getNewBoard (row:rob) col token = row:rob
 
 getmove :: Board -> IO Int
 getmove board = do
-    putStrLn( "Please place a token in a column between 0 and " ++ show (length board))
+    putStrLn( "Please place a token in a column between 1 and " ++ show (length (board!!0)))
     col <- getNum
-    if col <= (length board) then return col else (getmove board)
+    if (isValidColumn col (length (board!!0))) 
+        then return (col - 1) else (getmove board)
+
+isValidColumn :: Int -> Int -> Bool
+isValidColumn col max = col > 0 && col <= max 
 
 printBoard :: Board -> IO ()
 printBoard board =
