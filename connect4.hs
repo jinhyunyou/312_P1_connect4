@@ -32,11 +32,16 @@ main = do
     cols <- getNum
     play (createboard rows cols)
 
-play :: Board -> IO ()
-play board = do
+play :: Board -> Token -> IO ()
+play board token = do
     move <- (getmove board)
-    -- newBoard <- 
+    newBoard <- getNewBoard board move token
+    if isGameWon board token then do putStrLn("Player using token " ++ (showToken token):[] ++ " wins!") else play newBoard (getOpponentToken token)
     printBoard (board)
+
+getNewBoard (row:rob) col token = row:rob
+
+isGameWon board player = False
 
 getmove :: Board -> IO Int
 getmove board = do
@@ -49,6 +54,12 @@ printBoard board =
   putStrLn (unlines (map showRow board))
   where
    showRow = map showToken
+
+getOpponentToken :: Token -> Token
+getOpponentToken t
+    | t == P1 = P2
+    | t == P2 = P1
+    | otherwise = E -- ?
 
 showToken :: Token -> Char
 showToken P1 = 'A'
