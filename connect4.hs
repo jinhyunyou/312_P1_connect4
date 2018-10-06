@@ -80,14 +80,12 @@ play board token = do
     move <- (getmove board)
     let newBoard = getNewBoard board move token
     printBoard (newBoard)
-    if isGameWon newBoard token then do 
+    if checkWinToken newBoard token then do 
         putStrLn("Player using token " ++ (showToken token):[] ++ " wins!") 
         else play newBoard (getOpponentToken token)
 
 getNewBoard :: Board -> Int -> Token -> Board
 getNewBoard (row:rob) col token = row:rob
-
-isGameWon board player = True
 
 getmove :: Board -> IO Int
 getmove board = do
