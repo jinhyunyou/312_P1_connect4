@@ -64,7 +64,6 @@ getOpponentToken :: Token -> Token
 getOpponentToken t
     | t == P1 = P2
     | t == P2 = P1
-    | otherwise = E -- ?
 
 showToken :: Token -> Char
 showToken P1 = 'A'
