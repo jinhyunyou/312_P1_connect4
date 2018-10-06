@@ -46,13 +46,13 @@ findConsecToken (f:s:t:fo:ta) token
  | otherwise = findConsecToken (s:t:fo:ta) token
 findConsecToken (h:t) token = False
 
-createboard :: Int -> Int -> [[Token]]
+createboard :: Int -> Int -> Board
 createboard rows cols 
     | rows > 0 = createrow cols : createboard (rows - 1) cols
     | otherwise = []
 
 
-createrow :: Int -> [Token]
+createrow :: Int -> Row
 createrow cols
     | cols > 0 = E : createrow (cols - 1)
     | otherwise = []
@@ -73,18 +73,21 @@ main = do
     rows <- getNum
     putStrLn "Please enter the number of columns on the gameboard."
     cols <- getNum
-    play (createboard rows cols)
+    play (createboard rows cols) P1
 
 play :: Board -> Token -> IO ()
 play board token = do
     move <- (getmove board)
-    newBoard <- getNewBoard board move token
-    if isGameWon board token then do putStrLn("Player using token " ++ (showToken token):[] ++ " wins!") else play newBoard (getOpponentToken token)
-    printBoard (board)
+    let newBoard = getNewBoard board move token
+    printBoard (newBoard)
+    if isGameWon newBoard token then do 
+        putStrLn("Player using token " ++ (showToken token):[] ++ " wins!") 
+        else play newBoard (getOpponentToken token)
 
+getNewBoard :: Board -> Int -> Token -> Board
 getNewBoard (row:rob) col token = row:rob
 
-isGameWon board player = False
+isGameWon board player = True
 
 getmove :: Board -> IO Int
 getmove board = do
