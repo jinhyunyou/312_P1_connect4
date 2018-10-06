@@ -78,7 +78,7 @@ main = do
 play :: Board -> Token -> IO ()
 play board token = do
     move <- (getmove board)
-    let newBoard = getNewBoard board move token
+    let newBoard = InsertNTimes 6 move token board
     printBoard (newBoard)
     if checkWinToken newBoard token then do 
         putStrLn("Player using token " ++ (showToken token):[] ++ " wins!") 
@@ -94,7 +94,7 @@ getmove board = do
     if col <= (length board) then return col else (getmove board)
 
 printBoard :: Board -> IO ()
-printBoard board =
+printBoard board = 
   putStrLn (unlines (map showRow board))
   where
    showRow = map showToken
@@ -110,3 +110,29 @@ showToken P1 = 'A'
 showToken P2 = 'B'
 showToken E = '.'
 
+
+
+
+InsertNTimes n m t b  
+    |n==0 = play b t 
+    |otherwise = 
+      do
+        let newBoard = makeMove n m t b
+        if (newBoard == b)
+         then do
+            InsertNTimes (n-1) m t b
+         else do
+            return newBoard
+
+			
+			
+makeMove :: Int -> Int -> Token -> Board -> Board
+makeMove n m c (x:xs)
+      |m==0 = (replacey n c x) : xs
+      |otherwise = x : (makeMove n (m-1) c xs)
+         where replacey n c (x:xs) 
+                   |n==0 = if x==E then c : xs else E : xs
+                   |otherwise = x : (replacey (n-1) c xs)
+ 
+
+ 
