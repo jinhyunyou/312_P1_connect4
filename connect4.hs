@@ -78,7 +78,7 @@ main = do
 play :: Board -> Token -> IO ()
 play board token = do
     move <- (getmove board)
-    let newBoard = InsertNTimes 6 move token board
+    let newBoard = insertNTimes 6 (read move::Int) token board
     printBoard (newBoard)
     if checkWinToken newBoard token then do 
         putStrLn("Player using token " ++ (showToken token):[] ++ " wins!") 
@@ -113,7 +113,7 @@ showToken E = '.'
 
 
 
-InsertNTimes n m t b  
+insertNTimes n m t b 
     |n==0 = play b t 
     |otherwise = 
       do
