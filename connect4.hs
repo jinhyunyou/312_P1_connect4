@@ -1,50 +1,7 @@
 module Connect4 where
 
-import Data.List
 import Connect4Types
-import Data.Map (Map)
-
-isTie :: Board -> Bool
-isTie [] = True
-isTie (h:t) 
- | checkTie h = isTie t
- | otherwise = False
-
-checkTie :: Row -> Bool
-checkTie row 
- | E `notElem` row = True
- | otherwise = False
-
-checkWin :: Board -> Token
-checkWin board 
- | checkWinToken board P1 = P1
- | checkWinToken board P2 = P2
- | otherwise = E
-
-checkWinToken :: Board -> Token -> Bool
-checkWinToken board token
- | horizontalCheck board token = True
- | verticalCheck (transpose board) token = True
- | otherwise = False
-
-verticalCheck :: Board -> Token -> Bool
-verticalCheck [] token = False
-verticalCheck (h:t) token 
- | findConsecToken h token = True
- | otherwise = verticalCheck t token
-
-horizontalCheck :: Board -> Token -> Bool
-horizontalCheck [] token = False
-horizontalCheck (h:t) token 
- | findConsecToken h token = True
- | otherwise = horizontalCheck t token
-
--- Find 4 consecutive player in a list 
-findConsecToken :: Row -> Token -> Bool
-findConsecToken (f:s:t:fo:ta) token
- | f == token && s == token && t == token && fo == token = True
- | otherwise = findConsecToken (s:t:fo:ta) token
-findConsecToken (h:t) token = False
+import WinConditions
 
 createboard :: Int -> Int -> Board
 createboard rows cols 
@@ -89,9 +46,13 @@ getNewBoard (row:rob) col token = row:rob
 
 getmove :: Board -> IO Int
 getmove board = do
-    putStrLn( "Please place a token in a column between 0 and " ++ show (length board))
+    putStrLn( "Please place a token in a column between 1 and " ++ show (length (board!!0)))
     col <- getNum
-    if col <= (length board) then return col else (getmove board)
+    if (isValidColumn col (length (board!!0))) 
+        then return (col - 1) else (getmove board)
+
+isValidColumn :: Int -> Int -> Bool
+isValidColumn col max = col > 0 && col <= max 
 
 printBoard :: Board -> IO ()
 printBoard board = 
