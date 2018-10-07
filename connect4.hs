@@ -36,7 +36,7 @@ main = do
 
 play :: Board -> Token -> IO ()
 play board token = do
-    move <- (getmove board)
+    move <- (getmove board token)
     let newBoard = insertNTimes move ((length board)-1) token board
     printBoard (newBoard)
     if checkWinToken newBoard token then do 
@@ -46,11 +46,11 @@ play board token = do
 getNewBoard :: Board -> Int -> Token -> Board
 getNewBoard (row:rob) col token = row:rob
 
-getmove :: Board -> IO Int
-getmove board = do
-    putStrLn( "Please place a token in a column between 0 and " ++ show ((length board)-1))
+getmove :: Board -> Token -> IO Int
+getmove board token = do
+    putStrLn("Player " ++ (showToken token):[] ++ ", please place a token in a column between 0 and " ++ show ((length board)-1))
     col <- getNum
-    if col <= (length board) then return col else (getmove board)
+    if col <= (length board) then return col else (getmove board token)
 
 printBoard :: Board -> IO ()
 printBoard board = 
