@@ -1,7 +1,9 @@
 module Connect4 where
 
+import Data.List
 import Connect4Types
 import WinConditions
+import Data.Map (Map)
 
 createboard :: Int -> Int -> Board
 createboard rows cols 
@@ -35,7 +37,7 @@ main = do
 play :: Board -> Token -> IO ()
 play board token = do
     move <- (getmove board)
-    let newBoard = insertNTimes 6 (read move::Int) token board
+    let newBoard = insertNTimes move ((length board)-1) token board
     printBoard (newBoard)
     if checkWinToken newBoard token then do 
         putStrLn("Player using token " ++ (showToken token):[] ++ " wins!") 
@@ -46,13 +48,9 @@ getNewBoard (row:rob) col token = row:rob
 
 getmove :: Board -> IO Int
 getmove board = do
-    putStrLn( "Please place a token in a column between 1 and " ++ show (length (board!!0)))
+    putStrLn( "Please place a token in a column between 0 and " ++ show ((length board)-1))
     col <- getNum
-    if (isValidColumn col (length (board!!0))) 
-        then return (col - 1) else (getmove board)
-
-isValidColumn :: Int -> Int -> Bool
-isValidColumn col max = col > 0 && col <= max 
+    if col <= (length board) then return col else (getmove board)
 
 printBoard :: Board -> IO ()
 printBoard board = 
@@ -71,22 +69,24 @@ showToken P2 = 'B'
 showToken E = '.'
 
 insertNTimes n m t b 
-    |n==0 = play b t 
+    |m == -1 = b
     |otherwise = 
       do
         let newBoard = makeMove n m t b
         if (newBoard == b)
          then do
-            InsertNTimes (n-1) m t b
+            insertNTimes n (m-1) t b
          else do
-            return newBoard
+            newBoard
 
 makeMove :: Int -> Int -> Token -> Board -> Board
 makeMove n m c (x:xs)
       |m==0 = (replacey n c x) : xs
       |otherwise = x : (makeMove n (m-1) c xs)
-         where replacey n c (x:xs) 
-                   |n==0 = if x==E then c : xs else E : xs
+         where 
+          replacey n c [] = []
+          replacey n c (x:xs) 
+                   |n==0 = if x==E then c : xs else x : xs
                    |otherwise = x : (replacey (n-1) c xs)
  
 
