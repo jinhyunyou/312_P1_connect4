@@ -32,8 +32,11 @@ main = do
     rows <- getNum
     putStrLn "Please enter the number of columns on the gameboard."
     cols <- getNum
-    play (createboard rows cols) P1
-
+    if rows > 0 && cols > 0 then do
+        play (createboard rows cols) P1
+    else do
+        putStrLn("Rows and Columns should be bigger than 0") 
+        main
 play :: Board -> Token -> IO ()
 play board token = do
     move <- (getmove board token)
