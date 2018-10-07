@@ -42,6 +42,7 @@ play board token = do
     move <- (getmove board token)
     let newBoard = insertNTimes move ((length board)-1) token board
     if (newBoard == board) then do
+        putStrLn("Invalid inputs") 
         play board token
         else do printBoard (newBoard) 
                 if checkWinToken newBoard token then do 
