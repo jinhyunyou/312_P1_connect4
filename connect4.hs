@@ -38,10 +38,14 @@ play :: Board -> Token -> IO ()
 play board token = do
     move <- (getmove board token)
     let newBoard = insertNTimes move ((length board)-1) token board
-    printBoard (newBoard)
-    if checkWinToken newBoard token then do 
-        putStrLn("Player using token " ++ (showToken token):[] ++ " wins!") 
-        else play newBoard (getOpponentToken token)
+    if (newBoard == board) then do
+        play board token
+        else do printBoard (newBoard) 
+                if checkWinToken newBoard token then do 
+                    putStrLn("Player using token " ++ (showToken token):[] ++ " wins!") 
+                else if isTie newBoard then do
+                    putStrLn("Board full! Draw") 
+                else play newBoard (getOpponentToken token)
 
 getNewBoard :: Board -> Int -> Token -> Board
 getNewBoard (row:rob) col token = row:rob
