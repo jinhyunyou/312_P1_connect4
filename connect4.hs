@@ -73,7 +73,7 @@ getOpponentToken t
 showToken :: Token -> Char
 showToken P1 = 'A'
 showToken P2 = 'B'
-showToken E = '.'
+showToken E =  '.'
 
 insertNTimes n m t b 
     |m == -1 = b
