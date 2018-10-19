@@ -78,8 +78,11 @@ getAllDiagonals :: Board -> [[Token]]
 getAllDiagonals board = (diagonals board) ++ (diagonals (getReverseBoard board))
 
 -- Get diagonals from board
+-- From http://hackage.haskell.org/package/universe-base-1.0.2.1/docs/Data-Universe-Helpers.html#v:diagonals
 diagonals :: Board -> [[Token]]
-diagonals []       = []
-diagonals ([]:board) = board
-diagonals board      = zipWith (++) (map ((:[]) . head) board ++ repeat [])
-                                  ([]:(diagonals (map tail board)))
+diagonals = tail . go [] where
+    go b es_ = [h | h:_ <- b] : case es_ of
+        []   -> transpose ts
+        e:es -> go (e:ts) es
+        where ts = [t | _:t <- b]
+
